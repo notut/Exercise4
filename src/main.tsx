@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import Application from "./modules/app/Application"; // Sjekk om dette er riktig sti
+import { Application } from "./modules/app/Application"; // Sjekk om dette er riktig sti
 
 const rootElement = document.getElementById("root");
 
