@@ -5,11 +5,13 @@ import TileLayer from "ol/layer/Tile";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import GeoJSON from "ol/format/GeoJSON";
-import { Style, Fill, Stroke, Icon } from "ol/style";
+import { Style, Icon } from "ol/style";
 import Overlay from "ol/Overlay";
 import { useGeographic } from "ol/proj";
 
 import "ol/ol.css";
+import "./Application.css";
+//import { BackgroundLayerSelect } from "../layer/backgroundLayerSelect";
 
 useGeographic();
 export function Application() {
@@ -21,7 +23,7 @@ export function Application() {
   } | null>(null);
 
   useEffect(() => {
-    const defaultPolygonStyle = new Style({
+    /*const defaultPolygonStyle = new Style({
       fill: new Fill({ color: "rgba(245,33,233,0.3)" }),
       stroke: new Stroke({ color: "#f85699", width: 2 }),
     });
@@ -29,7 +31,7 @@ export function Application() {
     const hoverPolygonStyle = new Style({
       fill: new Fill({ color: "rgba(0,200,255,0.5)" }),
       stroke: new Stroke({ color: "#00BBFF", width: 3 }),
-    });
+    });*/
 
     const getPointStyle = (brannstasjoner: number, isHovered = false) =>
       new Style({
@@ -40,12 +42,12 @@ export function Application() {
         }),
       });
     const getIconSrc = (brannstasjoner: number) => {
-      if (brannstasjoner) return "public/icons/brann.png";
-      return "public/icons/brann.png";
+      if (brannstasjoner) return "/icons/brann.png";
+      return "/icons/brann.png";
     };
 
     const BrannSource = new VectorSource({
-      url: "public/geojson/Brannstasjoner.json",
+      url: "/geojson/Brannstasjoner.json",
       format: new GeoJSON(),
     });
 
@@ -72,13 +74,17 @@ export function Application() {
     });
 
     map.on("pointermove", (event) => {
-      const feature = map.forEachFeatureAtPixel(event.pixel, (feat) => feat);
+      const hoveredFeature = map.forEachFeatureAtPixel(
+        event.pixel,
+        (feat) => feat,
+      );
+
       BrannLayer.getSource()
         ?.getFeatures()
         .forEach((feat) => {
-          feat.setStyle(
-            feat === feature ? hoverPolygonStyle : defaultPolygonStyle,
-          );
+          const isHovered = feat === hoveredFeature;
+          const brannstasjoner = (feat.get("brannstasjoner") as number) || 0;
+          feat.setStyle(getPointStyle(brannstasjoner, isHovered));
         });
     });
 
