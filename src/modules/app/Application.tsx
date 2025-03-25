@@ -10,7 +10,6 @@ import Overlay from "ol/Overlay";
 import { useGeographic } from "ol/proj";
 
 import "ol/ol.css";
-import "./Application.css";
 //import { BackgroundLayerSelect } from "../layer/backgroundLayerSelect";
 
 useGeographic();
@@ -23,16 +22,6 @@ export function Application() {
   } | null>(null);
 
   useEffect(() => {
-    /*const defaultPolygonStyle = new Style({
-      fill: new Fill({ color: "rgba(245,33,233,0.3)" }),
-      stroke: new Stroke({ color: "#f85699", width: 2 }),
-    });
-
-    const hoverPolygonStyle = new Style({
-      fill: new Fill({ color: "rgba(0,200,255,0.5)" }),
-      stroke: new Stroke({ color: "#00BBFF", width: 3 }),
-    });*/
-
     const getPointStyle = (brannstasjoner: number, isHovered = false) =>
       new Style({
         image: new Icon({
