@@ -6,7 +6,6 @@ import { optionsFromCapabilities } from "ol/source/WMTS";
 import { register } from "ol/proj/proj4";
 import proj4 from "proj4";
 import { View } from "ol";
-//import { Layer } from "ol/layer";
 
 proj4.defs([
   [
@@ -66,7 +65,7 @@ fetch(
   });
 
 const arcticLayer = new TileLayer();
-fetch("/kws2100-kartbaserte-websystemer/wmts/arctic-sdi.xml")
+fetch("public/wmts/arctic-sdi.xml")
   .then(function (response) {
     return response.text();
   })
