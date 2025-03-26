@@ -14,6 +14,7 @@ export function Application() {
   const [layers, setLayers] = useState<TileLayer[]>([
     new TileLayer({ source: new OSM() }),
   ]);
+  const [additionalLayers, setAdditionalLayers] = useState<any[]>([]);
   const [view, setView] = useState(
     new View({ center: [10.8, 59.9], zoom: 10 }),
   );
@@ -22,8 +23,8 @@ export function Application() {
     map.setTarget(mapRef.current!);
   }, []);
   useEffect(() => {
-    map.setLayers(layers);
-  }, [layers]);
+    map.setLayers([layers, ...additionalLayers]);
+  }, [layers, additionalLayers]);
   useEffect(() => {
     map.setView(view);
   }, [view]);
