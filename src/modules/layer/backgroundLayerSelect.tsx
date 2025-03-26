@@ -22,9 +22,7 @@ register(proj4);
 
 //Definerer hvilket kart som skal vises
 interface BackgroundLayerSelectProps {
-  setLayers: (
-    value: ((prevState: TileLayer[]) => TileLayer[]) | TileLayer[],
-  ) => void;
+  setBaseLayer: (layer: TileLayer) => void;
   setView: (value: ((prevState: View) => View) | View) => void;
 }
 
@@ -33,6 +31,8 @@ const stadiaLayer = new TileLayer({
 });
 const osmLayer = new TileLayer({ source: new OSM() });
 const kartverketLayer = new TileLayer();
+const photoLayer = new TileLayer();
+const arcticLayer = new TileLayer();
 const parser = new WMTSCapabilities();
 
 //Henter kartverket
@@ -50,7 +50,6 @@ fetch("https://cache.kartverket.no/v1/wmts/1.0.0/WMTSCapabilities.xml")
   });
 
 //Henter stadia kart
-const photoLayer = new TileLayer();
 fetch(
   "https://opencache.statkart.no/gatekeeper/gk/gk.open_nib_utm33_wmts_v2?SERVICE=WMTS&REQUEST=GetCapabilities",
 )
@@ -67,8 +66,7 @@ fetch(
   });
 
 //Henter arktisk kart
-const arcticLayer = new TileLayer();
-fetch("public/wmts/arctic-sdi.xml")
+fetch("/wmts/arctic-sdi.xml")
   .then(function (response) {
     return response.text();
   })
@@ -83,7 +81,7 @@ fetch("public/wmts/arctic-sdi.xml")
 
 //Setter visningen av kartene
 export function BackgroundLayerSelect({
-  setLayers,
+  setBaseLayer,
   setView,
 }: BackgroundLayerSelectProps) {
   const [backgroundLayer, setBackgroundLayer] = useState<TileLayer>(osmLayer);
@@ -105,7 +103,7 @@ export function BackgroundLayerSelect({
   }
 
   useEffect(() => {
-    setLayers([backgroundLayer]);
+    setBaseLayer(backgroundLayer);
 
     const source = backgroundLayer.getSource();
     if (source && typeof source.getProjection === "function") {
