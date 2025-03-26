@@ -7,6 +7,7 @@ import { register } from "ol/proj/proj4";
 import proj4 from "proj4";
 import { View } from "ol";
 
+//Definerer projection
 proj4.defs([
   [
     "EPSG:25833",
@@ -19,23 +20,22 @@ proj4.defs([
 ]);
 register(proj4);
 
+//Definerer hvilket kart som skal vises
 interface BackgroundLayerSelectProps {
   setLayers: (
     value: ((prevState: TileLayer[]) => TileLayer[]) | TileLayer[],
   ) => void;
   setView: (value: ((prevState: View) => View) | View) => void;
 }
-//const [view, setView] = useState(new View({ center: [10.8, 59.9], zoom: 7 }));
 
 const stadiaLayer = new TileLayer({
   source: new StadiaMaps({ layer: "alidade_smooth" }),
 });
-
 const osmLayer = new TileLayer({ source: new OSM() });
-
 const kartverketLayer = new TileLayer();
 const parser = new WMTSCapabilities();
 
+//Henter kartverket
 fetch("https://cache.kartverket.no/v1/wmts/1.0.0/WMTSCapabilities.xml")
   .then(function (response) {
     return response.text();
@@ -49,6 +49,7 @@ fetch("https://cache.kartverket.no/v1/wmts/1.0.0/WMTSCapabilities.xml")
     kartverketLayer.setSource(new WMTS(options!));
   });
 
+//Henter stadia kart
 const photoLayer = new TileLayer();
 fetch(
   "https://opencache.statkart.no/gatekeeper/gk/gk.open_nib_utm33_wmts_v2?SERVICE=WMTS&REQUEST=GetCapabilities",
@@ -65,6 +66,7 @@ fetch(
     photoLayer.setSource(new WMTS(options!));
   });
 
+//Henter arktisk kart
 const arcticLayer = new TileLayer();
 fetch("public/wmts/arctic-sdi.xml")
   .then(function (response) {
@@ -79,12 +81,14 @@ fetch("public/wmts/arctic-sdi.xml")
     arcticLayer.setSource(new WMTS(options!));
   });
 
+//Setter visningen av kartene
 export function BackgroundLayerSelect({
   setLayers,
   setView,
 }: BackgroundLayerSelectProps) {
   const [backgroundLayer, setBackgroundLayer] = useState<TileLayer>(osmLayer);
 
+  //Behandler endringen av kart
   function handleChange(e: ChangeEvent<HTMLSelectElement>) {
     console.log(e.target.value);
     if (e.target.value === "stadia") {
@@ -119,6 +123,7 @@ export function BackgroundLayerSelect({
     }
   }, [backgroundLayer]);
 
+  //Endring av kart knapp
   return (
     <select onChange={handleChange}>
       <option value={"osm"}>Open Street Map</option>
