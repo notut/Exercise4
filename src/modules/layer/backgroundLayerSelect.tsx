@@ -25,6 +25,7 @@ interface BackgroundLayerSelectProps {
   ) => void;
   setView: (value: ((prevState: View) => View) | View) => void;
 }
+//const [view, setView] = useState(new View({ center: [10.8, 59.9], zoom: 7 }));
 
 const stadiaLayer = new TileLayer({
   source: new StadiaMaps({ layer: "alidade_smooth" }),
